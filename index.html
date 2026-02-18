@@ -1,0 +1,3452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUI Agent Builder - API Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg-main: #0f0f10;
+            --color-bg-secondary: #18181b;
+            --color-bg-tertiary: #27272a;
+            --color-bg-code: #1e1e22;
+            --color-border: #3f3f46;
+            --color-border-light: #52525b;
+            --color-text-main: #fafafa;
+            --color-text-secondary: #a1a1aa;
+            --color-text-muted: #71717a;
+            --color-accent: #18E299;
+            --color-accent-hover: #0C8C5E;
+            --color-accent-bg: rgba(24, 226, 153, 0.1);
+            --color-warning: #fbbf24;
+            --color-error: #ef4444;
+            --color-info: #3b82f6;
+            --sidebar-width: 280px;
+            --header-height: 64px;
+            --toc-width: 220px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--color-bg-main);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: rgba(15, 15, 16, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--color-text-main);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .header-nav a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--color-text-main);
+        }
+
+        .header-cta {
+            background: var(--color-accent);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .header-cta:hover {
+            background: var(--color-accent-hover);
+            color: #fff;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            padding-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: var(--color-bg-main);
+            border-right: 1px solid var(--color-border);
+            overflow-y: auto;
+            padding: 24px 16px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            padding: 8px 12px;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 8px 12px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-main);
+        }
+
+        .sidebar-link.active {
+            background: var(--color-accent-bg);
+            color: var(--color-accent);
+        }
+
+        .sidebar-sublink {
+            padding-left: 24px;
+            font-size: 13px;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 48px 96px;
+        }
+
+        /* Scroll offset for fixed header */
+        .content section[id] {
+            scroll-margin-top: calc(var(--header-height) + 24px);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--color-text-main);
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 36px;
+            line-height: 1.2;
+            margin-top: 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        h2 {
+            font-size: 24px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        h3 {
+            font-size: 20px;
+        }
+
+        h4 {
+            font-size: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--color-text-secondary);
+        }
+
+        strong {
+            color: var(--color-text-main);
+            font-weight: 600;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            background: var(--color-bg-code);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--color-accent);
+        }
+
+        pre {
+            background: var(--color-bg-code);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0 24px;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: var(--color-text-main);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            padding: 8px 16px;
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .code-header + pre {
+            margin-top: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            background: var(--color-bg-secondary);
+            font-weight: 600;
+            color: var(--color-text-main);
+        }
+
+        td {
+            color: var(--color-text-secondary);
+        }
+
+        tr:hover td {
+            background: var(--color-bg-secondary);
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .card {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-accent-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 20px;
+        }
+
+        .card h4 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 16px 0 24px;
+            border-left: 4px solid;
+        }
+
+        .callout-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--color-info);
+        }
+
+        .callout-warning {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: var(--color-warning);
+        }
+
+        .callout-success {
+            background: var(--color-accent-bg);
+            border-color: var(--color-accent);
+        }
+
+        .callout-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .callout p {
+            margin-bottom: 0;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 4px;
+        }
+
+        .badge-get {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .badge-post {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .badge-put {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .badge-delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .badge-required {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .badge-optional {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        /* API Endpoint */
+        .endpoint {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            margin: 16px 0 24px;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--color-bg-tertiary);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--color-text-main);
+        }
+
+        .endpoint-body {
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 48px 0 64px;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 48px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--color-accent-bg);
+            color: var(--color-accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 16px;
+            font-size: 42px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent-hover);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-main);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-bg-tertiary);
+            text-decoration: none;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 16px 0 24px 24px;
+            color: var(--color-text-secondary);
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Syntax Highlighting */
+        .token-keyword { color: #c792ea; }
+        .token-string { color: #c3e88d; }
+        .token-number { color: #f78c6c; }
+        .token-property { color: #82aaff; }
+        .token-boolean { color: #ff9cac; }
+        .token-comment { color: #676e95; font-style: italic; }
+        .token-punctuation { color: #89ddff; }
+
+        /* Tabs */
+        .tabs {
+            margin: 16px 0 24px;
+        }
+
+        .tab-list {
+            display: flex;
+            gap: 4px;
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            padding: 8px 8px 0;
+        }
+
+        .tab-button {
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            transition: all 0.2s;
+        }
+
+        .tab-button:hover {
+            color: var(--color-text-main);
+        }
+
+        .tab-button.active {
+            background: var(--color-bg-code);
+            color: var(--color-text-main);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tabs pre {
+            margin-top: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        /* Section Links */
+        .section-link {
+            color: var(--color-text-muted);
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        h2:hover .section-link,
+        h3:hover .section-link {
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 32px 24px 64px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-border-light);
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--color-text-secondary);
+        }
+
+        /* Parameter List */
+        .param-list {
+            margin: 16px 0;
+        }
+
+        .param-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .param-item:last-child {
+            border-bottom: none;
+        }
+
+        .param-name {
+            min-width: 150px;
+        }
+
+        .param-name code {
+            background: var(--color-bg-tertiary);
+        }
+
+        .param-details {
+            flex: 1;
+        }
+
+        .param-type {
+            color: var(--color-text-muted);
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                <span class="logo-text">AUI Agent Builder</span>
+            </a>
+            <nav class="header-nav">
+                <a href="#overview">Overview</a>
+                <a href="#quick-start">Quick Start</a>
+                <a href="#api-reference">API Reference</a>
+                <a href="#cli">CLI</a>
+                <a href="#sdk">SDK</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <a href="#overview" class="sidebar-link active">Overview</a>
+                <a href="#apollo-1" class="sidebar-link">Apollo-1 Foundation Model</a>
+                <a href="#truths-paradigm" class="sidebar-link">The Truths Paradigm</a>
+                <a href="#org-hierarchy" class="sidebar-link">Organizational Hierarchy</a>
+                <a href="#quick-start" class="sidebar-link">Quick Start</a>
+                <a href="#project-structure" class="sidebar-link">Project Structure</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Core Concepts</div>
+                <a href="#agents" class="sidebar-link">Agents</a>
+                <a href="#parameters" class="sidebar-link">Parameters</a>
+                <a href="#entities" class="sidebar-link">Entities</a>
+                <a href="#tools" class="sidebar-link">Tools</a>
+                <a href="#integrations" class="sidebar-link">Integrations</a>
+                <a href="#rules" class="sidebar-link">Rules & Constraints</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">API Reference</div>
+                <a href="#api-reference" class="sidebar-link">Overview</a>
+                <a href="#api-conversations" class="sidebar-link">Tasks API</a>
+                <a href="#api-conversations" class="sidebar-link sidebar-sublink">Create Task</a>
+                <a href="#api-send-message" class="sidebar-link sidebar-sublink">Send Message</a>
+                <a href="#api-get-conversation" class="sidebar-link sidebar-sublink">Get Messages</a>
+                <a href="#api-websocket" class="sidebar-link">WebSocket API</a>
+                <a href="#api-agents" class="sidebar-link">Agent Config</a>
+                <a href="#api-configuration" class="sidebar-link">Configuration</a>
+                <a href="#api-response-schema" class="sidebar-link">Response Schema</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">CLI Reference</div>
+                <a href="#cli" class="sidebar-link">Overview</a>
+                <a href="#cli-init" class="sidebar-link">aui init</a>
+                <a href="#cli-validate" class="sidebar-link">aui validate</a>
+                <a href="#cli-push-pull" class="sidebar-link">aui push / pull</a>
+                <a href="#cli-sandbox" class="sidebar-link">aui sandbox</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">SDK</div>
+                <a href="#sdk" class="sidebar-link">NPM Packages</a>
+                <a href="#sdk-core" class="sidebar-link">@aui/core</a>
+                <a href="#sdk-api-client" class="sidebar-link">@aui.io/aui-client</a>
+                <a href="#sdk-cli" class="sidebar-link">@aui/cli</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Schema Reference</div>
+                <a href="#schema-agent" class="sidebar-link">Agent Schema</a>
+                <a href="#schema-tool" class="sidebar-link">Tool Schema</a>
+                <a href="#schema-parameter" class="sidebar-link">Parameter Schema</a>
+                <a href="#schema-integration" class="sidebar-link">Integration Schema</a>
+                <a href="#schema-rule" class="sidebar-link">Rule Schema</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="content">
+                <!-- Hero Section -->
+                <section class="hero" id="overview">
+                    <span class="hero-badge">Powered by Apollo-1</span>
+                    <h1>AUI Agent Builder</h1>
+                    <p>Build controllable, enterprise-grade conversational AI agents with declarative JSON configuration. Deploy task-oriented agents that combine conversational flexibility with strict behavioral constraints.</p>
+                    <div class="hero-buttons">
+                        <a href="#quick-start" class="btn btn-primary">Get Started</a>
+                        <a href="#api-reference" class="btn btn-secondary">API Reference</a>
+                    </div>
+                </section>
+
+                <!-- Overview Cards -->
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-icon">&#128736;</div>
+                        <h4>Declarative Configuration</h4>
+                        <p>Define agents, tools, parameters, and rules using simple JSON files. No code required.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#9881;</div>
+                        <h4>Neuro-Symbolic Engine</h4>
+                        <p>Apollo-1 combines neural language understanding with deterministic symbolic reasoning.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#128274;</div>
+                        <h4>Behavioral Constraints</h4>
+                        <p>Enforce business rules, authentication requirements, and policy constraints architecturally.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#128269;</div>
+                        <h4>White-Box Reasoning</h4>
+                        <p>Every decision is traceable and auditable with complete reasoning traces.</p>
+                    </div>
+                </div>
+
+                <!-- Apollo-1 Section -->
+                <section id="apollo-1">
+                    <h2>Apollo-1 Foundation Model <a href="#apollo-1" class="section-link">#</a></h2>
+                    <p>Apollo-1 is the first neuro-symbolic foundation model, purpose-built for task-oriented agents. It unifies generation and control in a single architecture, delivering both conversational flexibility and strict behavioral certainty.</p>
+
+                    <h3>Architecture</h3>
+                    <p>The Apollo-1 architecture consists of three core components:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Domain-Agnostic Encoder</strong></td>
+                                <td>Translates natural language into symbolic state</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stateful Reasoning Loop</strong></td>
+                                <td>Maintains symbolic state, computes actions, creates executable plans</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Domain-Agnostic Decoder</strong></td>
+                                <td>Generates natural language responses from symbolic output</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout callout-info">
+                        <div class="callout-title">Key Innovation</div>
+                        <p>Perception is probabilistic, but given the same state, the Reasoner always makes the same decision. This delivers behavioral certainty for enterprise applications.</p>
+                    </div>
+
+                    <h3>Two Agent Types</h3>
+                    <p>Apollo-1 distinguishes between two fundamentally different agent paradigms:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agent Type</th>
+                                <th>Priority</th>
+                                <th>Use Cases</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Open-ended Agents</strong></td>
+                                <td>Flexibility for individual users</td>
+                                <td>Coding assistants, personal AI, creative tools</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Task-oriented Agents</strong></td>
+                                <td>Organizational policy enforcement</td>
+                                <td>Airline booking, banking, insurance, support</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Apollo-1 specifically targets <strong>task-oriented use cases</strong> where behavioral certainty is non-negotiable. These agents must enforce organizational policies absolutely while maintaining natural conversational flow.</p>
+
+                    <h3>Key Advantages</h3>
+                    <div class="card-grid">
+                        <div class="card">
+                            <h4>Composability</h4>
+                            <p>Truths defined once apply across all relevant contexts automatically.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Maintainability</h4>
+                            <p>Single-source updates propagate universally across the system.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Auditability</h4>
+                            <p>Every decision traces to specific firing constraints for compliance.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Separation of Concerns</h4>
+                            <p>Operators define requirements without implementation details.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- The Truths Paradigm -->
+                <section id="truths-paradigm">
+                    <h2>The Truths Paradigm <a href="#truths-paradigm" class="section-link">#</a></h2>
+                    <p>Rather than scripting step-by-step workflows or relying on probabilistic LLM decisions, Apollo-1 uses a <strong>"Truths" paradigm</strong>. Operators declare domain truths, and the model interprets user input, computes explicit symbolic state, evaluates applicable constraints, then executes deterministically.</p>
+
+                    <div class="callout callout-success">
+                        <div class="callout-title">How It Works</div>
+                        <p>The model interprets user input &rarr; computes explicit symbolic state &rarr; evaluates applicable constraints &rarr; executes deterministically. Once state is correctly interpreted, compliance becomes deterministic rather than probabilistic.</p>
+                    </div>
+
+                    <h3>Constraint Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Purpose</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Policy Constraints</strong></td>
+                                <td>Business rules requiring enforcement</td>
+                                <td>"Block disputes after 8 days from transaction"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Confirmation Constraints</strong></td>
+                                <td>Actions requiring explicit user consent</td>
+                                <td>"Confirm before processing payment"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Authentication Constraints</strong></td>
+                                <td>Actions requiring identity verification</td>
+                                <td>"Verify ID for refunds over $200"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Unlike soft instructions or prompt engineering, constraints enforce at the <strong>architectural level</strong>. They are not suggestions that the LLM might ignore &mdash; they are hard rules that the symbolic reasoning engine enforces deterministically.</p>
+
+                    <h3>Conflict Resolution</h3>
+                    <p>When multiple constraints apply to the same entity or action, stricter actions take precedence:</p>
+
+                    <div class="code-header">
+                        <span>Priority Order (Highest to Lowest)</span>
+                    </div>
+                    <pre><code>BLOCK  &gt;  ASK_A_QUESTION  &gt;  ACTIVATE_ANOTHER_TOOL  &gt;  TEXT</code></pre>
+
+                    <p>This ensures that blocking constraints always win over less restrictive actions, maintaining safety and compliance.</p>
+                </section>
+
+                <!-- Organizational Hierarchy -->
+                <section id="org-hierarchy">
+                    <h2>Organizational Hierarchy <a href="#org-hierarchy" class="section-link">#</a></h2>
+                    <p>The AUI platform uses a three-level organizational structure to manage agents and their configurations:</p>
+
+                    <div class="flow-diagram">
+┌─────────────────────────────────────────────────────────────────┐
+│                         ORGANIZATION                             │
+│  Top-level entity representing a company                        │
+│  Example: "Acme Corporation"                                    │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                        ACCOUNT                           │    │
+│  │  Team or project workspace                               │    │
+│  │  Example: "Customer Support Team"                        │    │
+│  │                                                          │    │
+│  │  ┌─────────────────┐  ┌─────────────────┐              │    │
+│  │  │     AGENT       │  │     AGENT       │  ...         │    │
+│  │  │ "Support Bot"   │  │ "Sales Bot"     │              │    │
+│  │  │                 │  │                 │              │    │
+│  │  │ • Tools         │  │ • Tools         │              │    │
+│  │  │ • Parameters    │  │ • Parameters    │              │    │
+│  │  │ • Rules         │  │ • Rules         │              │    │
+│  │  │ • Integrations  │  │ • Integrations  │              │    │
+│  │  └─────────────────┘  └─────────────────┘              │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Scope</th>
+                                <th>Contains</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Organization</strong></td>
+                                <td>Company-wide</td>
+                                <td>Multiple accounts, billing, global settings</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Account</strong></td>
+                                <td>Team/Project</td>
+                                <td>Multiple agents, shared resources, team members</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Agent</strong></td>
+                                <td>Individual AI</td>
+                                <td>Tools, parameters, entities, rules, integrations</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>This hierarchy allows organizations to manage multiple agents across different teams while maintaining consistent governance and access control.</p>
+                </section>
+
+                <!-- Quick Start -->
+                <section id="quick-start">
+                    <h2>Quick Start <a href="#quick-start" class="section-link">#</a></h2>
+
+                    <h3>Installation</h3>
+                    <p>Install the AUI CLI globally using npm:</p>
+
+                    <div class="code-header">
+                        <span>Terminal</span>
+                    </div>
+                    <pre><code><span class="token-comment"># Install CLI globally</span>
+npm install -g @aui/cli
+
+<span class="token-comment"># Verify installation</span>
+aui --version</code></pre>
+
+                    <h3>Connect to Backend</h3>
+                    <div class="code-header">
+                        <span>Terminal</span>
+                    </div>
+                    <pre><code><span class="token-comment"># Interactive setup (recommended)</span>
+aui connect
+
+<span class="token-comment"># Or provide credentials directly</span>
+aui connect --api-key YOUR_KEY --org my-org --agent my-agent</code></pre>
+
+                    <h3>Initialize a Project</h3>
+                    <div class="code-header">
+                        <span>Terminal</span>
+                    </div>
+                    <pre><code><span class="token-comment"># Create a new agent project</span>
+aui init my-agent
+cd my-agent
+
+<span class="token-comment"># Or use a template</span>
+aui init my-agent --template banking</code></pre>
+
+                    <h3>Validate and Deploy</h3>
+                    <div class="code-header">
+                        <span>Terminal</span>
+                    </div>
+                    <pre><code><span class="token-comment"># Validate configuration</span>
+aui validate
+
+<span class="token-comment"># Push to backend</span>
+aui push</code></pre>
+                </section>
+
+                <!-- Project Structure -->
+                <section id="project-structure">
+                    <h2>Project Structure <a href="#project-structure" class="section-link">#</a></h2>
+
+                    <div class="code-header">
+                        <span>Project Layout</span>
+                    </div>
+                    <pre><code>my-agent/
+├── .auirc                    <span class="token-comment"># Project configuration</span>
+├── agent.aui.json            <span class="token-comment"># Agent metadata and settings</span>
+├── parameters.aui.json       <span class="token-comment"># Parameter definitions</span>
+├── entities.aui.json         <span class="token-comment"># Entity groupings</span>
+├── integrations.aui.json     <span class="token-comment"># API connections</span>
+├── rules.aui.json            <span class="token-comment"># Global constraint rules</span>
+├── tools/                    <span class="token-comment"># Tool definitions</span>
+│   └── *.aui.json
+├── tests/                    <span class="token-comment"># Conversation tests</span>
+│   └── *.test.aui.json
+└── docs/                     <span class="token-comment"># Documentation</span></code></pre>
+                </section>
+
+                <!-- Agents -->
+                <section id="agents">
+                    <h2>Agents <a href="#agents" class="section-link">#</a></h2>
+                    <p>Agents are the top-level configuration that defines your conversational AI. Each agent has an objective, guardrails, tone of voice, and associated tools.</p>
+
+                    <div class="code-header">
+                        <span>agent.aui.json</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"$schema"</span>: <span class="token-string">"https://aui.dev/schema/aui.schema.json"</span>,
+  <span class="token-property">"agent"</span>: {
+    <span class="token-property">"code"</span>: <span class="token-string">"retail-support-agent"</span>,
+    <span class="token-property">"version"</span>: <span class="token-string">"1.0.0"</span>,
+    <span class="token-property">"description"</span>: <span class="token-string">"Customer support agent for retail banking"</span>,
+    <span class="token-property">"language"</span>: <span class="token-string">"en"</span>,
+
+    <span class="token-property">"objective"</span>: <span class="token-string">"Help retail banking customers with account inquiries, transaction disputes, and general support questions."</span>,
+
+    <span class="token-property">"guardrails"</span>: <span class="token-string">"Never share customer account details without identity verification. Always verify identity before processing financial transactions. Escalate to human agent for disputes over $5000."</span>,
+
+    <span class="token-property">"tone_of_voice"</span>: {
+      <span class="token-property">"guidelines"</span>: <span class="token-string">"Professional, empathetic, and helpful"</span>,
+      <span class="token-property">"tone"</span>: <span class="token-string">"customer-focused"</span>,
+      <span class="token-property">"brevity"</span>: <span class="token-string">"concise"</span>
+    },
+
+    <span class="token-property">"scope"</span>: {
+      <span class="token-property">"org_id"</span>: <span class="token-string">"bank-corp"</span>,
+      <span class="token-property">"account_id"</span>: <span class="token-string">"retail-division"</span>
+    }
+  }
+}</code></pre>
+
+                    <h3>Agent Properties</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>code</code></td>
+                                <td>string</td>
+                                <td>Unique identifier for the agent</td>
+                            </tr>
+                            <tr>
+                                <td><code>version</code></td>
+                                <td>string</td>
+                                <td>Semantic version (e.g., 1.0.0)</td>
+                            </tr>
+                            <tr>
+                                <td><code>objective</code></td>
+                                <td>string</td>
+                                <td>Primary purpose of the agent</td>
+                            </tr>
+                            <tr>
+                                <td><code>guardrails</code></td>
+                                <td>string</td>
+                                <td>Safety guidelines and restrictions</td>
+                            </tr>
+                            <tr>
+                                <td><code>tone_of_voice</code></td>
+                                <td>object</td>
+                                <td>Communication style settings</td>
+                            </tr>
+                            <tr>
+                                <td><code>context</code></td>
+                                <td>object</td>
+                                <td>Static or API-based context data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Parameters -->
+                <section id="parameters">
+                    <h2>Parameters <a href="#parameters" class="section-link">#</a></h2>
+                    <p>Parameters are typed attributes that can be extracted from user input, populated from API responses, or used in both directions. They form the foundation of your agent's data model.</p>
+
+                    <div class="code-header">
+                        <span>parameters.aui.json</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"$schema"</span>: <span class="token-string">"https://aui.dev/schema/aui.schema.json"</span>,
+  <span class="token-property">"parameters"</span>: [
+    {
+      <span class="token-property">"code"</span>: <span class="token-string">"transaction-id"</span>,
+      <span class="token-property">"type"</span>: <span class="token-string">"string"</span>,
+      <span class="token-property">"usage"</span>: <span class="token-string">"output"</span>,
+      <span class="token-property">"description"</span>: <span class="token-string">"Unique identifier for a transaction"</span>
+    },
+    {
+      <span class="token-property">"code"</span>: <span class="token-string">"dispute-reason"</span>,
+      <span class="token-property">"type"</span>: <span class="token-string">"enum"</span>,
+      <span class="token-property">"usage"</span>: <span class="token-string">"input"</span>,
+      <span class="token-property">"description"</span>: <span class="token-string">"Reason for the dispute"</span>,
+      <span class="token-property">"values"</span>: [<span class="token-string">"unauthorized"</span>, <span class="token-string">"duplicate_charge"</span>, <span class="token-string">"product_damaged"</span>]
+    },
+    {
+      <span class="token-property">"code"</span>: <span class="token-string">"transaction-amount"</span>,
+      <span class="token-property">"type"</span>: <span class="token-string">"number"</span>,
+      <span class="token-property">"usage"</span>: <span class="token-string">"output"</span>,
+      <span class="token-property">"description"</span>: <span class="token-string">"Dollar amount of the transaction"</span>
+    }
+  ]
+}</code></pre>
+
+                    <h3>Parameter Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>string</code></td>
+                                <td>Text values</td>
+                            </tr>
+                            <tr>
+                                <td><code>number</code></td>
+                                <td>Numeric values (integers or decimals)</td>
+                            </tr>
+                            <tr>
+                                <td><code>boolean</code></td>
+                                <td>True/false values</td>
+                            </tr>
+                            <tr>
+                                <td><code>enum</code></td>
+                                <td>Predefined set of allowed values</td>
+                            </tr>
+                            <tr>
+                                <td><code>date</code></td>
+                                <td>Date values (YYYY-MM-DD format)</td>
+                            </tr>
+                            <tr>
+                                <td><code>array</code></td>
+                                <td>List of values</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Usage Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usage</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>input</code></td>
+                                <td>Extracted from user messages</td>
+                            </tr>
+                            <tr>
+                                <td><code>output</code></td>
+                                <td>Populated from API responses</td>
+                            </tr>
+                            <tr>
+                                <td><code>all</code></td>
+                                <td>Can be both extracted and populated</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Type-Specific Operators</h3>
+                    <p>Different parameter types support different comparison operators in rule conditions:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Supported Operators</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>string</code></td>
+                                <td><code>equals</code>, <code>not_equals</code>, <code>contains</code>, <code>not_contains</code>, <code>is_empty</code>, <code>is_not_empty</code>, <code>about</code> (semantic)</td>
+                            </tr>
+                            <tr>
+                                <td><code>number</code></td>
+                                <td><code>equals</code>, <code>not_equals</code>, <code>greater_than</code>, <code>less_than</code>, <code>greater_or_equal</code>, <code>less_or_equal</code>, <code>between</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>enum</code></td>
+                                <td><code>equals</code>, <code>not_equals</code>, <code>is_empty</code>, <code>is_not_empty</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>date</code></td>
+                                <td><code>equals</code>, <code>greater_than</code> (after), <code>less_than</code> (before), <code>between</code>, <code>more_than_x_days</code>, <code>less_than_x_days</code>, <code>exactly_x_days</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>boolean</code></td>
+                                <td><code>equals</code> (true/false)</td>
+                            </tr>
+                            <tr>
+                                <td><code>array</code></td>
+                                <td><code>contains</code>, <code>not_contains</code>, <code>is_empty</code>, <code>is_not_empty</code>, <code>any_have_value</code>, <code>all_have_value</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout callout-info">
+                        <div class="callout-title">Semantic Matching with "about"</div>
+                        <p>The <code>about</code> operator uses AI-powered semantic matching, allowing conditions like "user_question about 'refund'" to match variations like "I want my money back" or "Can I get a refund?"</p>
+                    </div>
+                </section>
+
+                <!-- Entities -->
+                <section id="entities">
+                    <h2>Entities <a href="#entities" class="section-link">#</a></h2>
+                    <p>Entities group related parameters into logical units. They represent the "nouns" of your agent's domain &mdash; objects like Products, Transactions, or Users.</p>
+
+                    <div class="code-header">
+                        <span>entities.aui.json</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"$schema"</span>: <span class="token-string">"https://aui.dev/schema/aui.schema.json"</span>,
+  <span class="token-property">"entities"</span>: [
+    {
+      <span class="token-property">"code"</span>: <span class="token-string">"Transactions"</span>,
+      <span class="token-property">"description"</span>: <span class="token-string">"Customer transaction records"</span>,
+      <span class="token-property">"params"</span>: [
+        <span class="token-string">"transaction-id"</span>,
+        <span class="token-string">"transaction-amount"</span>,
+        <span class="token-string">"transaction-status"</span>
+      ]
+    },
+    {
+      <span class="token-property">"code"</span>: <span class="token-string">"UserProfile"</span>,
+      <span class="token-property">"description"</span>: <span class="token-string">"Customer profile information"</span>,
+      <span class="token-property">"params"</span>: [
+        <span class="token-string">"customer-id"</span>,
+        <span class="token-string">"account-tier"</span>
+      ]
+    }
+  ]
+}</code></pre>
+
+                    <div class="callout callout-success">
+                        <div class="callout-title">Best Practice</div>
+                        <p>Entities are automatically populated from API responses through integration <code>response_mapping</code>. Design your entities to mirror your domain model for seamless data flow.</p>
+                    </div>
+                </section>
+
+                <!-- Tools -->
+                <section id="tools">
+                    <h2>Tools <a href="#tools" class="section-link">#</a></h2>
+                    <p>Tools are the actionable capabilities of your agent. Each tool encapsulates logic to perform a specific function, with defined triggers, required parameters, integrations, and rules.</p>
+
+                    <div class="code-header">
+                        <span>tools/create-dispute.aui.json</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"$schema"</span>: <span class="token-string">"https://aui.dev/schema/aui.schema.json"</span>,
+  <span class="token-property">"tool"</span>: {
+    <span class="token-property">"code"</span>: <span class="token-string">"CREATE_DISPUTE"</span>,
+    <span class="token-property">"objective"</span>: <span class="token-string">"When the user wants to dispute a transaction or report fraudulent activity"</span>,
+    <span class="token-property">"status"</span>: <span class="token-boolean">true</span>,
+    <span class="token-property">"main_tool"</span>: <span class="token-boolean">true</span>,
+    <span class="token-property">"requires_confirmation"</span>: <span class="token-boolean">true</span>,
+    <span class="token-property">"response_type"</span>: <span class="token-string">"text"</span>,
+    <span class="token-property">"tone_of_voice"</span>: <span class="token-string">"empathetic"</span>,
+
+    <span class="token-property">"config"</span>: {
+      <span class="token-property">"triggers"</span>: {
+        <span class="token-property">"when"</span>: {
+          <span class="token-property">"any"</span>: [
+            { <span class="token-property">"method"</span>: <span class="token-string">"extracted_params_in_current_turn"</span>, <span class="token-property">"params"</span>: [<span class="token-string">"dispute-reason"</span>] }
+          ]
+        }
+      },
+      <span class="token-property">"params"</span>: {
+        <span class="token-property">"required"</span>: [<span class="token-string">"transaction-id"</span>, <span class="token-string">"dispute-reason"</span>],
+        <span class="token-property">"optional"</span>: [<span class="token-string">"supporting-documentation"</span>]
+      }
+    },
+
+    <span class="token-property">"integrations"</span>: [
+      { <span class="token-property">"ref"</span>: <span class="token-string">"lookup-transaction"</span> },
+      { <span class="token-property">"ref"</span>: <span class="token-string">"create-dispute-api"</span> }
+    ],
+
+    <span class="token-property">"rules"</span>: {
+      <span class="token-property">"post"</span>: {
+        <span class="token-property">"success"</span>: [
+          {
+            <span class="token-property">"when"</span>: {},
+            <span class="token-property">"then"</span>: {
+              <span class="token-property">"action"</span>: <span class="token-string">"TEXT"</span>,
+              <span class="token-property">"message"</span>: <span class="token-string">"Dispute created successfully. Case #{{Disputes.dispute-id}}"</span>
+            }
+          }
+        ],
+        <span class="token-property">"fail"</span>: [
+          {
+            <span class="token-property">"when"</span>: {},
+            <span class="token-property">"then"</span>: {
+              <span class="token-property">"action"</span>: <span class="token-string">"ACTIVATE_ANOTHER_TOOL"</span>,
+              <span class="token-property">"tool"</span>: <span class="token-string">"ESCALATE_TO_AGENT"</span>
+            }
+          }
+        ]
+      }
+    }
+  }
+}</code></pre>
+
+                    <h3>Tool Execution Flow</h3>
+                    <p>When a tool is invoked, Apollo-1 processes it through a prioritized logic sequence:</p>
+
+                    <div class="flow-diagram">
+┌─────────────────────────────────────────────────────────────────┐
+│                     TOOL EXECUTION FLOW                          │
+└─────────────────────────────────────────────────────────────────┘
+
+  User Message
+       │
+       ▼
+  ┌─────────────────┐
+  │ 1. CONSTRAINTS  │  ◀── Are there blocking conditions? (highest priority)
+  │    Check        │
+  └────────┬────────┘
+           │
+     ┌─────┴─────┐
+     │           │
+   BLOCK      PASS
+     │           │
+     ▼           ▼
+  ┌──────┐  ┌─────────────────┐
+  │ END  │  │ 2. MISSING INFO │  ◀── Is required information missing?
+  └──────┘  │    Rules        │
+            └────────┬────────┘
+                     │
+               ┌─────┴─────┐
+               │           │
+            MISSING     FILLED
+               │           │
+               ▼           ▼
+        ┌───────────┐  ┌─────────────────┐
+        │ ASK/BLOCK │  │ 3. INTEGRATIONS │  ◀── Execute API calls
+        └───────────┘  └────────┬────────┘
+                                │
+                          ┌─────┴─────┐
+                          │           │
+                       SUCCESS      FAIL
+                          │           │
+                          ▼           ▼
+                   ┌───────────┐  ┌───────────┐
+                   │ 4. POST   │  │ 4. POST   │
+                   │ SUCCESS   │  │ FAIL      │
+                   │ Rules     │  │ Rules     │
+                   └───────────┘  └───────────┘
+                    </div>
+
+                    <div class="callout callout-warning">
+                        <div class="callout-title">Execution Order Matters</div>
+                        <p>Constraints are always evaluated first. Blocking behaviors take precedence over information gathering, which takes precedence over execution. This ensures safety rules cannot be bypassed.</p>
+                    </div>
+
+                    <h3>Tool Activation</h3>
+                    <p>Tools can be activated through multiple mechanisms:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Activation Method</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Intent Classification</strong></td>
+                                <td>Model matches user intent to tool objective (primary mechanism)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Structured Triggers</strong></td>
+                                <td>Parameter extraction or conversation events trigger the tool</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rule Activation</strong></td>
+                                <td>Another tool's rule activates this tool via <code>ACTIVATE_ANOTHER_TOOL</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Continuation</strong></td>
+                                <td>Tool continues from previous turn (awaiting params/confirmation)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Tool States</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>When It Occurs</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Missing Info</strong></td>
+                                <td>Required parameters are missing</td>
+                                <td>Ask user, activate another tool, call API, or block</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Success</strong></td>
+                                <td>Integration returned valid data</td>
+                                <td>Apply situational rules based on returned data</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fail</strong></td>
+                                <td>API error or no results</td>
+                                <td>Activate fallback tool, try another API, expand search</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Tool Properties</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>code</code></td>
+                                <td>string</td>
+                                <td>Unique identifier (SCREAMING_SNAKE_CASE)</td>
+                            </tr>
+                            <tr>
+                                <td><code>objective</code></td>
+                                <td>string</td>
+                                <td>When to activate this tool</td>
+                            </tr>
+                            <tr>
+                                <td><code>main_tool</code></td>
+                                <td>boolean</td>
+                                <td>If true, agent can activate directly</td>
+                            </tr>
+                            <tr>
+                                <td><code>requires_confirmation</code></td>
+                                <td>boolean</td>
+                                <td>Ask user confirmation before executing</td>
+                            </tr>
+                            <tr>
+                                <td><code>response_type</code></td>
+                                <td>enum</td>
+                                <td><code>text</code> or <code>text_and_widget</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>brevity</code></td>
+                                <td>enum</td>
+                                <td><code>concise</code>, <code>normal</code>, or <code>verbose</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Integrations -->
+                <section id="integrations">
+                    <h2>Integrations <a href="#integrations" class="section-link">#</a></h2>
+                    <p>Integrations connect your agent to external APIs, databases, and services. AUI supports multiple integration types for different use cases.</p>
+
+                    <h3>Integration Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Purpose</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>REST</code></td>
+                                <td>REST API endpoints</td>
+                                <td>Custom backends, third-party services</td>
+                            </tr>
+                            <tr>
+                                <td><code>RAG</code></td>
+                                <td>Document retrieval</td>
+                                <td>Knowledge bases, FAQs</td>
+                            </tr>
+                            <tr>
+                                <td><code>MCP</code></td>
+                                <td>Model Context Protocol</td>
+                                <td>Standardized tool interfaces</td>
+                            </tr>
+                            <tr>
+                                <td><code>GEN_AI</code></td>
+                                <td>LLM content generation</td>
+                                <td>Dynamic content within tool logic</td>
+                            </tr>
+                            <tr>
+                                <td><code>INTERNAL_CONTEXT</code></td>
+                                <td>Conversation context</td>
+                                <td>Using previously collected data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>REST Integration Example</h3>
+                    <div class="code-header">
+                        <span>integrations.aui.json</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"integrations"</span>: [
+    {
+      <span class="token-property">"code"</span>: <span class="token-string">"create-dispute-api"</span>,
+      <span class="token-property">"description"</span>: <span class="token-string">"Create a new dispute case"</span>,
+      <span class="token-property">"type"</span>: <span class="token-string">"REST"</span>,
+      <span class="token-property">"endpoint"</span>: {
+        <span class="token-property">"url"</span>: <span class="token-string">"https://api.bank.com/v1/disputes"</span>,
+        <span class="token-property">"method"</span>: <span class="token-string">"POST"</span>,
+        <span class="token-property">"auth"</span>: {
+          <span class="token-property">"type"</span>: <span class="token-string">"bearer"</span>,
+          <span class="token-property">"env"</span>: <span class="token-string">"BANK_API_TOKEN"</span>
+        },
+        <span class="token-property">"headers"</span>: {
+          <span class="token-property">"Content-Type"</span>: <span class="token-string">"application/json"</span>
+        }
+      },
+      <span class="token-property">"request_schema"</span>: [
+        {
+          <span class="token-property">"name"</span>: <span class="token-string">"transaction_id"</span>,
+          <span class="token-property">"type"</span>: <span class="token-string">"string"</span>,
+          <span class="token-property">"required"</span>: <span class="token-boolean">true</span>,
+          <span class="token-property">"in"</span>: <span class="token-string">"body"</span>,
+          <span class="token-property">"connector"</span>: {
+            <span class="token-property">"entity"</span>: <span class="token-string">"Transactions"</span>,
+            <span class="token-property">"param"</span>: <span class="token-string">"transaction-id"</span>
+          }
+        },
+        {
+          <span class="token-property">"name"</span>: <span class="token-string">"reason"</span>,
+          <span class="token-property">"type"</span>: <span class="token-string">"string"</span>,
+          <span class="token-property">"required"</span>: <span class="token-boolean">true</span>,
+          <span class="token-property">"in"</span>: <span class="token-string">"body"</span>
+        }
+      ],
+      <span class="token-property">"response_mapping"</span>: {
+        <span class="token-property">"entities"</span>: [
+          {
+            <span class="token-property">"code"</span>: <span class="token-string">"Disputes"</span>,
+            <span class="token-property">"identifier"</span>: <span class="token-string">"id"</span>,
+            <span class="token-property">"paths"</span>: [<span class="token-string">"*"</span>],
+            <span class="token-property">"mappings"</span>: [
+              { <span class="token-property">"key"</span>: <span class="token-string">"id"</span>, <span class="token-property">"param"</span>: <span class="token-string">"dispute-id"</span> },
+              { <span class="token-property">"key"</span>: <span class="token-string">"status"</span>, <span class="token-property">"param"</span>: <span class="token-string">"dispute-status"</span> }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}</code></pre>
+
+                    <h3>Authentication Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>bearer</code></td>
+                                <td>Bearer token in Authorization header</td>
+                            </tr>
+                            <tr>
+                                <td><code>api_key</code></td>
+                                <td>API key in custom header</td>
+                            </tr>
+                            <tr>
+                                <td><code>basic</code></td>
+                                <td>Basic authentication</td>
+                            </tr>
+                            <tr>
+                                <td><code>oauth2</code></td>
+                                <td>OAuth 2.0 flow</td>
+                            </tr>
+                            <tr>
+                                <td><code>hmac_sha256</code></td>
+                                <td>HMAC-SHA256 signature</td>
+                            </tr>
+                            <tr>
+                                <td><code>none</code></td>
+                                <td>No authentication</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Rules -->
+                <section id="rules">
+                    <h2>Rules & Constraints <a href="#rules" class="section-link">#</a></h2>
+                    <p>Rules define the behavior of your agent. Constraints are hard rules that must be enforced, while guardrails are soft guidance.</p>
+
+                    <h3>Rule Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Use For</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Policy Constraints</strong></td>
+                                <td>Business rules</td>
+                                <td>"Block disputes for transactions older than 8 days"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Confirmation Constraints</strong></td>
+                                <td>User consent</td>
+                                <td>"Require confirmation before processing payment"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Authentication Constraints</strong></td>
+                                <td>Identity verification</td>
+                                <td>"Require ID verification for refunds over $200"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Constraint Example</h3>
+                    <div class="code-header">
+                        <span>rules.aui.json</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"rules"</span>: {
+    <span class="token-property">"pre"</span>: {
+      <span class="token-property">"constraint"</span>: [
+        {
+          <span class="token-property">"code"</span>: <span class="token-string">"block-banned-users"</span>,
+          <span class="token-property">"description"</span>: <span class="token-string">"Block all actions for banned users"</span>,
+          <span class="token-property">"applies_to"</span>: [],  <span class="token-comment">// Empty = ALL tools</span>
+          <span class="token-property">"when"</span>: {
+            <span class="token-property">"all"</span>: [
+              {
+                <span class="token-property">"method"</span>: <span class="token-string">"user_profile"</span>,
+                <span class="token-property">"param"</span>: <span class="token-string">"is-banned"</span>,
+                <span class="token-property">"operator"</span>: <span class="token-string">"equals"</span>,
+                <span class="token-property">"value"</span>: <span class="token-boolean">true</span>
+              }
+            ]
+          },
+          <span class="token-property">"then"</span>: {
+            <span class="token-property">"action"</span>: <span class="token-string">"BLOCK"</span>,
+            <span class="token-property">"message"</span>: <span class="token-string">"Your account has been suspended."</span>
+          }
+        }
+      ]
+    }
+  }
+}</code></pre>
+
+                    <h3>Condition Methods</h3>
+                    <p>Conditions evaluate various aspects of the conversation state:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>param_exists</code></td>
+                                <td>Check if a parameter has a value</td>
+                                <td><code>{ "method": "param_exists", "param": "transaction-id" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>param_missing</code></td>
+                                <td>Check if a parameter is missing</td>
+                                <td><code>{ "method": "param_missing", "param": "dispute-reason" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>param_value</code></td>
+                                <td>Compare accumulated parameter value</td>
+                                <td><code>{ "method": "param_value", "param": "amount", "operator": "greater_than", "value": 1000 }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>param_extracted_current</code></td>
+                                <td>Check parameter extracted in current turn</td>
+                                <td><code>{ "method": "param_extracted_current", "param": "product-type", "operator": "about", "value": "clothing" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>entity_param</code></td>
+                                <td>Check entity parameter value</td>
+                                <td><code>{ "method": "entity_param", "entity": "Product", "param": "price", "operator": "less_than", "value": 100 }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>entity_param_referenced</code></td>
+                                <td>Check if entity was referenced in current turn</td>
+                                <td><code>{ "method": "entity_param_referenced", "entity": "CreditCards" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>user_profile</code></td>
+                                <td>Check user profile attribute</td>
+                                <td><code>{ "method": "user_profile", "param": "account-tier", "operator": "equals", "value": "premium" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>user_question</code></td>
+                                <td>Semantic match on user message</td>
+                                <td><code>{ "method": "user_question", "operator": "about", "value": "refund" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>conversation_started</code></td>
+                                <td>True at the start of conversation</td>
+                                <td><code>{ "method": "conversation_started" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>current_url</code></td>
+                                <td>Check URL context (web widget)</td>
+                                <td><code>{ "method": "current_url", "operator": "contains", "value": "/checkout" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>tool_required_params_filled</code></td>
+                                <td>All required params are filled</td>
+                                <td><code>{ "method": "tool_required_params_filled" }</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>tool_optional_params_filled</code></td>
+                                <td>All optional params are filled</td>
+                                <td><code>{ "method": "tool_optional_params_filled" }</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Operators</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>equals</code> / <code>not_equals</code></td>
+                                <td>Exact match comparison</td>
+                            </tr>
+                            <tr>
+                                <td><code>contains</code> / <code>not_contains</code></td>
+                                <td>String or array contains</td>
+                            </tr>
+                            <tr>
+                                <td><code>greater_than</code> / <code>less_than</code></td>
+                                <td>Numeric comparison</td>
+                            </tr>
+                            <tr>
+                                <td><code>between</code></td>
+                                <td>Value within range</td>
+                            </tr>
+                            <tr>
+                                <td><code>about</code></td>
+                                <td>Semantic/AI-evaluated match</td>
+                            </tr>
+                            <tr>
+                                <td><code>more_than_x_days</code> / <code>less_than_x_days</code></td>
+                                <td>Date comparison</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Rule Actions</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Description</th>
+                                <th>Additional Properties</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>TEXT</code></td>
+                                <td>Display a message to the user</td>
+                                <td><code>message</code> (supports <code>{{Entity.param}}</code> interpolation)</td>
+                            </tr>
+                            <tr>
+                                <td><code>ASK_A_QUESTION</code></td>
+                                <td>Ask user for information</td>
+                                <td><code>message</code>, <code>params</code> (parameters to collect)</td>
+                            </tr>
+                            <tr>
+                                <td><code>BLOCK</code></td>
+                                <td>Block the action and end tool execution</td>
+                                <td><code>message</code> (reason for blocking)</td>
+                            </tr>
+                            <tr>
+                                <td><code>BLOCK_AND_ACTIVATE_ANOTHER_TOOL</code></td>
+                                <td>Block current tool and activate fallback</td>
+                                <td><code>tool</code>, <code>message</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>ACTIVATE_ANOTHER_TOOL</code></td>
+                                <td>Hand off to another tool</td>
+                                <td><code>tool</code> (tool code to activate)</td>
+                            </tr>
+                            <tr>
+                                <td><code>ADD_REQUIRED_PARAM</code></td>
+                                <td>Dynamically require parameters</td>
+                                <td><code>params</code>, <code>reason</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>RETRY</code></td>
+                                <td>Retry the current operation</td>
+                                <td><code>max_retries</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>CALL_API</code></td>
+                                <td>Trigger an integration call</td>
+                                <td><code>integration</code> (integration code)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Rule Placement</h3>
+                    <p>Rules are organized by when they execute relative to the tool's integration calls:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Category</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Global</strong></td>
+                                <td><code>pre.constraint</code></td>
+                                <td>Apply to all tools, block/redirect before execution</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>Tool Pre-Execution</strong></td>
+                                <td><code>pre.constraint</code></td>
+                                <td>Tool-specific blocking conditions</td>
+                            </tr>
+                            <tr>
+                                <td><code>pre.missing_info</code></td>
+                                <td>Handle missing parameter scenarios</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>Tool Post-Execution</strong></td>
+                                <td><code>post.success</code></td>
+                                <td>Handle successful integration response</td>
+                            </tr>
+                            <tr>
+                                <td><code>post.fail</code></td>
+                                <td>Handle failed integration response</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout callout-info">
+                        <div class="callout-title">Conditional Required Parameters</div>
+                        <p>Use <code>config.params.conditional</code> in tools to dynamically add required parameters based on conditions. This is useful for cases like "require documentation for disputes over $1000".</p>
+                    </div>
+                </section>
+
+                <!-- API Reference -->
+                <section id="api-reference">
+                    <h2>API Reference <a href="#api-reference" class="section-link">#</a></h2>
+                    <p>The AUI API provides RESTful endpoints and WebSocket connections for deploying and interacting with agents. All endpoints require authentication via network API key.</p>
+
+                    <h3>Environments</h3>
+                    <p>AUI provides two cloud deployment options:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Environment</th>
+                                <th>REST API</th>
+                                <th>WebSocket</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>GCP (Default)</strong></td>
+                                <td><code>https://api.aui.io/ia-controller</code></td>
+                                <td><code>wss://api.aui.io/ia-controller</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Azure</strong></td>
+                                <td><code>https://azure-v2.aui.io/ia-controller</code></td>
+                                <td><code>wss://azure-v2.aui.io/ia-controller</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>AWS</strong></td>
+                                <td><code>https://aws.aui.io/ia-controller</code></td>
+                                <td><code>wss://aws.aui.io/ia-controller</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Authentication</h3>
+                    <p>Include your network API key in the <code>x-network-api-key</code> header:</p>
+                    <div class="code-header">
+                        <span>HTTP Header</span>
+                    </div>
+                    <pre><code>x-network-api-key: YOUR_NETWORK_API_KEY</code></pre>
+
+                    <div class="callout callout-warning">
+                        <div class="callout-title">Obtaining API Keys</div>
+                        <p>Network API keys are provided by your AUI administrator. Contact your organization's admin to obtain credentials for development and production environments.</p>
+                    </div>
+                </section>
+
+                <!-- API: Tasks -->
+                <section id="api-conversations">
+                    <h2>Tasks API <a href="#api-conversations" class="section-link">#</a></h2>
+                    <p>Tasks represent conversation sessions with an agent. Create a task to start a new conversation.</p>
+
+                    <h3>Create Task</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/v1/external/tasks</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Create a new task (conversation) for a user.</p>
+
+                            <h4>Request Body</h4>
+                            <div class="param-list">
+                                <div class="param-item">
+                                    <div class="param-name">
+                                        <code>user_id</code>
+                                        <span class="badge badge-required">required</span>
+                                    </div>
+                                    <div class="param-details">
+                                        <div class="param-type">string</div>
+                                        Unique identifier for the user
+                                    </div>
+                                </div>
+                                <div class="param-item">
+                                    <div class="param-name">
+                                        <code>task_origin_type</code>
+                                        <span class="badge badge-required">required</span>
+                                    </div>
+                                    <div class="param-details">
+                                        <div class="param-type">string</div>
+                                        Origin of the task (e.g., "web-widget", "api", "mobile")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <div class="tab-list">
+                            <button class="tab-button active" onclick="switchTab(event, 'create-conv-request')">Request</button>
+                            <button class="tab-button" onclick="switchTab(event, 'create-conv-response')">Response</button>
+                        </div>
+                        <div id="create-conv-request" class="tab-content active">
+                            <pre><code>POST /api/v1/external/tasks
+Content-Type: application/json
+x-network-api-key: YOUR_NETWORK_API_KEY
+
+{
+  <span class="token-property">"user_id"</span>: <span class="token-string">"user123"</span>,
+  <span class="token-property">"task_origin_type"</span>: <span class="token-string">"web-widget"</span>
+}</code></pre>
+                        </div>
+                        <div id="create-conv-response" class="tab-content">
+                            <pre><code>{
+  <span class="token-property">"id"</span>: <span class="token-string">"68e78d0dc5a4b19a030d03d6"</span>,
+  <span class="token-property">"user_id"</span>: <span class="token-string">"user123"</span>,
+  <span class="token-property">"title"</span>: <span class="token-string">"New Conversation"</span>,
+  <span class="token-property">"welcome_message"</span>: <span class="token-string">"Hello! How can I help you today?"</span>,
+  <span class="token-property">"followup_suggestions"</span>: [
+    <span class="token-string">"I need help with my order"</span>,
+    <span class="token-string">"Check my account balance"</span>,
+    <span class="token-string">"Report a problem"</span>
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API: Send Message -->
+                <section id="api-send-message">
+                    <h3>Send Message (REST)</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-post">POST</span>
+                            <span class="endpoint-path">/api/v1/external/message</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Send a message to an active task and receive the agent's response (non-streaming).</p>
+
+                            <h4>Request Body</h4>
+                            <div class="param-list">
+                                <div class="param-item">
+                                    <div class="param-name">
+                                        <code>task_id</code>
+                                        <span class="badge badge-required">required</span>
+                                    </div>
+                                    <div class="param-details">
+                                        <div class="param-type">string</div>
+                                        The task ID from Create Task
+                                    </div>
+                                </div>
+                                <div class="param-item">
+                                    <div class="param-name">
+                                        <code>text</code>
+                                        <span class="badge badge-required">required</span>
+                                    </div>
+                                    <div class="param-details">
+                                        <div class="param-type">string</div>
+                                        The user's message text
+                                    </div>
+                                </div>
+                                <div class="param-item">
+                                    <div class="param-name">
+                                        <code>is_external_api</code>
+                                        <span class="badge badge-optional">optional</span>
+                                    </div>
+                                    <div class="param-details">
+                                        <div class="param-type">boolean</div>
+                                        Set to true for external API calls
+                                    </div>
+                                </div>
+                                <div class="param-item">
+                                    <div class="param-name">
+                                        <code>context</code>
+                                        <span class="badge badge-optional">optional</span>
+                                    </div>
+                                    <div class="param-details">
+                                        <div class="param-type">object</div>
+                                        Additional context (e.g., current URL)
+                                    </div>
+                                </div>
+                                <div class="param-item">
+                                    <div class="param-name">
+                                        <code>agent_variables</code>
+                                        <span class="badge badge-optional">optional</span>
+                                    </div>
+                                    <div class="param-details">
+                                        <div class="param-type">object</div>
+                                        Variables to pass to the agent
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <div class="tab-list">
+                            <button class="tab-button active" onclick="switchTab(event, 'send-msg-request')">Request</button>
+                            <button class="tab-button" onclick="switchTab(event, 'send-msg-response')">Response</button>
+                        </div>
+                        <div id="send-msg-request" class="tab-content active">
+                            <pre><code>POST /api/v1/external/message
+Content-Type: application/json
+x-network-api-key: YOUR_NETWORK_API_KEY
+
+{
+  <span class="token-property">"task_id"</span>: <span class="token-string">"68e78d0dc5a4b19a030d03d6"</span>,
+  <span class="token-property">"text"</span>: <span class="token-string">"I want to dispute a transaction from yesterday"</span>,
+  <span class="token-property">"is_external_api"</span>: <span class="token-boolean">true</span>,
+  <span class="token-property">"context"</span>: {
+    <span class="token-property">"url"</span>: <span class="token-string">"https://myapp.com/dashboard"</span>
+  }
+}</code></pre>
+                        </div>
+                        <div id="send-msg-response" class="tab-content">
+                            <pre><code>{
+  <span class="token-property">"interaction_id"</span>: <span class="token-string">"698db9ed93709a631a319fbd"</span>,
+  <span class="token-property">"session_id"</span>: <span class="token-string">"698db85393709a631a319ed3"</span>,
+  <span class="token-property">"timestamp"</span>: <span class="token-string">"2026-02-17T10:30:52.333Z"</span>,
+  <span class="token-property">"duration_ms"</span>: <span class="token-number">4156</span>,
+
+  <span class="token-property">"input"</span>: {
+    <span class="token-property">"message"</span>: <span class="token-string">"I want to dispute a transaction from yesterday"</span>,
+    <span class="token-property">"channel"</span>: <span class="token-string">"WEBSOCKET"</span>
+  },
+
+  <span class="token-property">"understanding"</span>: {
+    <span class="token-property">"guardrails"</span>: { <span class="token-property">"passed"</span>: <span class="token-boolean">true</span> },
+    <span class="token-property">"intent"</span>: <span class="token-string">"User wants to dispute a recent transaction"</span>,
+    <span class="token-property">"extracted_params"</span>: {
+      <span class="token-property">"dispute-intent"</span>: <span class="token-string">"dispute"</span>
+    }
+  },
+
+  <span class="token-property">"decisions"</span>: [
+    {
+      <span class="token-property">"type"</span>: <span class="token-string">"activate_tool"</span>,
+      <span class="token-property">"tool"</span>: <span class="token-string">"CREATE_DISPUTE"</span>,
+      <span class="token-property">"trigger"</span>: {
+        <span class="token-property">"type"</span>: <span class="token-string">"intent_classification"</span>,
+        <span class="token-property">"matched_objective"</span>: <span class="token-string">"dispute a transaction"</span>
+      }
+    },
+    {
+      <span class="token-property">"type"</span>: <span class="token-string">"params_check"</span>,
+      <span class="token-property">"tool"</span>: <span class="token-string">"CREATE_DISPUTE"</span>,
+      <span class="token-property">"status"</span>: <span class="token-string">"missing_required"</span>,
+      <span class="token-property">"missing"</span>: [<span class="token-string">"transaction-id"</span>, <span class="token-string">"dispute-reason"</span>]
+    }
+  ],
+
+  <span class="token-property">"response"</span>: {
+    <span class="token-property">"type"</span>: <span class="token-string">"question"</span>,
+    <span class="token-property">"message"</span>: <span class="token-string">"I can help you dispute a transaction. Which transaction would you like to dispute?"</span>,
+    <span class="token-property">"tool"</span>: <span class="token-string">"CREATE_DISPUTE"</span>,
+    <span class="token-property">"tool_status"</span>: <span class="token-string">"awaiting_params"</span>,
+    <span class="token-property">"suggestions"</span>: [
+      <span class="token-string">"Show my recent transactions"</span>,
+      <span class="token-string">"The charge from Amazon"</span>
+    ]
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API: Get Task Messages -->
+                <section id="api-get-conversation">
+                    <h3>Get Task Messages</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/v1/external/tasks/{task_id}/messages</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Retrieve all messages in a task conversation.</p>
+                        </div>
+                    </div>
+
+                    <h3>List User Tasks</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/v1/external/tasks?user_id={user_id}&page={page}&size={size}</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>List all tasks for a specific user with pagination.</p>
+                        </div>
+                    </div>
+
+                    <h3>Get Product Metadata</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/api/v1/external/product-metadata?link={url}</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Extract product information from URLs. Returns name, price, description, images, and category.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API: WebSocket -->
+                <section id="api-websocket">
+                    <h2>WebSocket API <a href="#api-websocket" class="section-link">#</a></h2>
+                    <p>For real-time streaming responses, connect via WebSocket.</p>
+
+                    <h3>Connection URL</h3>
+                    <div class="code-header">
+                        <span>WebSocket Endpoint</span>
+                    </div>
+                    <pre><code>wss://api.aui.io/ia-controller/api/v1/external/session?network_api_key=YOUR_API_KEY</code></pre>
+
+                    <h3>Send Message</h3>
+                    <p>Send JSON messages with the following structure:</p>
+                    <div class="code-header">
+                        <span>WebSocket Message</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"task_id"</span>: <span class="token-string">"68e78d0dc5a4b19a030d03d6"</span>,
+  <span class="token-property">"text"</span>: <span class="token-string">"I need help with my order"</span>
+}</code></pre>
+
+                    <h3>Response Events</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Text Update</strong></td>
+                                <td>Streaming text content from the agent</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Final Message</strong></td>
+                                <td>Complete response with recommendations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product Card</strong></td>
+                                <td>Structured product information with parameters</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Follow-up Suggestions</strong></td>
+                                <td>AI-generated next-step suggestions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- API: Agents -->
+                <section id="api-agents">
+                    <h2>Agents API <a href="#api-agents" class="section-link">#</a></h2>
+
+                    <h3>Get Agent</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents/{agent_code}</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Retrieve agent configuration.</p>
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <div class="tab-list">
+                            <button class="tab-button active" onclick="switchTab(event, 'get-agent-curl')">cURL</button>
+                            <button class="tab-button" onclick="switchTab(event, 'get-agent-js')">JavaScript</button>
+                            <button class="tab-button" onclick="switchTab(event, 'get-agent-python')">Python</button>
+                        </div>
+                        <div id="get-agent-curl" class="tab-content active">
+                            <pre><code>curl -X POST "https://api.aui.io/ia-controller/api/v1/external/tasks" \
+  -H "x-network-api-key: YOUR_NETWORK_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "user123", "task_origin_type": "api"}'</code></pre>
+                        </div>
+                        <div id="get-agent-js" class="tab-content">
+                            <pre><code><span class="token-keyword">import</span> { ApolloClient } <span class="token-keyword">from</span> <span class="token-string">'@aui.io/aui-client'</span>;
+
+<span class="token-keyword">const</span> client = <span class="token-keyword">new</span> ApolloClient({
+  networkApiKey: process.env.NETWORK_API_KEY
+});
+
+<span class="token-comment">// Create a task and send a message</span>
+<span class="token-keyword">const</span> task = <span class="token-keyword">await</span> client.controllerApi.createTask({
+  user_id: <span class="token-string">'user123'</span>,
+  task_origin_type: <span class="token-string">'api'</span>
+});
+
+<span class="token-keyword">const</span> response = <span class="token-keyword">await</span> client.controllerApi.sendMessage({
+  task_id: task.id,
+  text: <span class="token-string">'Hello!'</span>
+});
+console.log(response);</code></pre>
+                        </div>
+                        <div id="get-agent-python" class="tab-content">
+                            <pre><code><span class="token-keyword">import</span> requests
+
+<span class="token-comment"># Create a task</span>
+response = requests.post(
+    <span class="token-string">'https://api.aui.io/ia-controller/api/v1/external/tasks'</span>,
+    headers={<span class="token-string">'x-network-api-key'</span>: <span class="token-string">'YOUR_NETWORK_API_KEY'</span>},
+    json={<span class="token-string">'user_id'</span>: <span class="token-string">'user123'</span>, <span class="token-string">'task_origin_type'</span>: <span class="token-string">'api'</span>}
+)
+
+task = response.json()
+<span class="token-keyword">print</span>(task)</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API: Update Agent -->
+                <section id="api-update-agent">
+                    <h3>Update Agent</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-put">PUT</span>
+                            <span class="endpoint-path">/agents/{agent_code}</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Update agent configuration.</p>
+                        </div>
+                    </div>
+
+                    <h3>List Agents</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>List all agents in your organization.</p>
+                        </div>
+                    </div>
+
+                    <h3>Delete Agent</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-delete">DELETE</span>
+                            <span class="endpoint-path">/agents/{agent_code}</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Delete an agent and all its configuration.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API: Configuration -->
+                <section id="api-configuration">
+                    <h2>Configuration API <a href="#api-configuration" class="section-link">#</a></h2>
+                    <p>Manage agent configuration components including parameters, entities, tools, integrations, and rules.</p>
+
+                    <h3>Parameters</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents/{agent_code}/parameters</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-put">PUT</span>
+                            <span class="endpoint-path">/agents/{agent_code}/parameters</span>
+                        </div>
+                    </div>
+
+                    <h3>Entities</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents/{agent_code}/entities</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-put">PUT</span>
+                            <span class="endpoint-path">/agents/{agent_code}/entities</span>
+                        </div>
+                    </div>
+
+                    <h3>Tools</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents/{agent_code}/tools</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents/{agent_code}/tools/{tool_code}</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-put">PUT</span>
+                            <span class="endpoint-path">/agents/{agent_code}/tools/{tool_code}</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-post">POST</span>
+                            <span class="endpoint-path">/agents/{agent_code}/tools</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-delete">DELETE</span>
+                            <span class="endpoint-path">/agents/{agent_code}/tools/{tool_code}</span>
+                        </div>
+                    </div>
+
+                    <h3>Integrations</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents/{agent_code}/integrations</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-put">PUT</span>
+                            <span class="endpoint-path">/agents/{agent_code}/integrations</span>
+                        </div>
+                    </div>
+
+                    <h3>Rules</h3>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <span class="endpoint-path">/agents/{agent_code}/rules</span>
+                        </div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="badge badge-put">PUT</span>
+                            <span class="endpoint-path">/agents/{agent_code}/rules</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API: Response Schema -->
+                <section id="api-response-schema">
+                    <h2>Response Schema <a href="#api-response-schema" class="section-link">#</a></h2>
+                    <p>Every message to the Conversation API returns a complete interaction response with reasoning trace.</p>
+
+                    <h3>Response Structure</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>interaction_id</code></td>
+                                <td>string</td>
+                                <td>Unique interaction identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>session_id</code></td>
+                                <td>string</td>
+                                <td>Conversation session ID</td>
+                            </tr>
+                            <tr>
+                                <td><code>timestamp</code></td>
+                                <td>datetime</td>
+                                <td>Interaction timestamp</td>
+                            </tr>
+                            <tr>
+                                <td><code>duration_ms</code></td>
+                                <td>number</td>
+                                <td>Processing time in milliseconds</td>
+                            </tr>
+                            <tr>
+                                <td><code>input</code></td>
+                                <td>object</td>
+                                <td>User's message and metadata</td>
+                            </tr>
+                            <tr>
+                                <td><code>context</code></td>
+                                <td>object</td>
+                                <td>State from previous interactions</td>
+                            </tr>
+                            <tr>
+                                <td><code>understanding</code></td>
+                                <td>object</td>
+                                <td>How input was interpreted</td>
+                            </tr>
+                            <tr>
+                                <td><code>decisions</code></td>
+                                <td>array</td>
+                                <td>Sequential chain of decisions</td>
+                            </tr>
+                            <tr>
+                                <td><code>response</code></td>
+                                <td>object</td>
+                                <td>Final response to user</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Response Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>answer</code></td>
+                                <td>Direct answer to the user</td>
+                            </tr>
+                            <tr>
+                                <td><code>question</code></td>
+                                <td>Asking user for information</td>
+                            </tr>
+                            <tr>
+                                <td><code>confirmation_request</code></td>
+                                <td>Asking user to confirm an action</td>
+                            </tr>
+                            <tr>
+                                <td><code>blocked</code></td>
+                                <td>Action was blocked by constraint</td>
+                            </tr>
+                            <tr>
+                                <td><code>error</code></td>
+                                <td>Error occurred</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Decision Types</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>activate_tool</code></td>
+                                <td>A tool was activated</td>
+                            </tr>
+                            <tr>
+                                <td><code>params_check</code></td>
+                                <td>Parameters were verified</td>
+                            </tr>
+                            <tr>
+                                <td><code>rule_triggered</code></td>
+                                <td>A rule was triggered</td>
+                            </tr>
+                            <tr>
+                                <td><code>call_integration</code></td>
+                                <td>API call was made</td>
+                            </tr>
+                            <tr>
+                                <td><code>ask_question</code></td>
+                                <td>Question posed to user</td>
+                            </tr>
+                            <tr>
+                                <td><code>ask_confirmation</code></td>
+                                <td>Confirmation requested</td>
+                            </tr>
+                            <tr>
+                                <td><code>block</code></td>
+                                <td>Action blocked</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- CLI Reference -->
+                <section id="cli">
+                    <h2>CLI Reference <a href="#cli" class="section-link">#</a></h2>
+                    <p>The AUI CLI provides commands for building, testing, and deploying agents.</p>
+
+                    <h3>Installation</h3>
+                    <div class="code-header">
+                        <span>Terminal</span>
+                    </div>
+                    <pre><code>npm install -g @aui/cli
+aui --version</code></pre>
+                </section>
+
+                <section id="cli-init">
+                    <h3>aui init</h3>
+                    <p>Initialize a new AUI project.</p>
+                    <div class="code-header">
+                        <span>Usage</span>
+                    </div>
+                    <pre><code>aui init [directory] [options]
+
+Options:
+  -t, --template &lt;name&gt;   Use template: banking, ecommerce, support
+  -f, --force             Overwrite existing files</code></pre>
+                </section>
+
+                <section id="cli-validate">
+                    <h3>aui validate</h3>
+                    <p>Validate AUI configuration files.</p>
+                    <div class="code-header">
+                        <span>Usage</span>
+                    </div>
+                    <pre><code>aui validate [path] [options]
+
+Options:
+  -v, --verbose           Show detailed output
+
+Validation Checks:
+  - JSON syntax validation
+  - Schema compliance
+  - Parameter references
+  - Entity references
+  - Tool configuration
+  - Integration references
+  - Duplicate detection
+  - Naming conventions</code></pre>
+                </section>
+
+                <section id="cli-push-pull">
+                    <h3>aui push / pull</h3>
+                    <p>Sync configuration with the backend.</p>
+                    <div class="code-header">
+                        <span>Usage</span>
+                    </div>
+                    <pre><code><span class="token-comment"># Download agent from backend</span>
+aui pull [agent-code] [options]
+
+Options:
+  -f, --force             Overwrite existing files
+
+<span class="token-comment"># Upload agent to backend</span>
+aui push [agent-code] [options]
+
+Options:
+  -f, --force             Force push even with validation errors
+  --skip-validation       Skip validation before push
+
+<span class="token-comment"># Two-way sync with conflict resolution</span>
+aui sync [options]
+
+Options:
+  -f, --force             Force local changes
+  -n, --dry-run           Show what would change</code></pre>
+                </section>
+
+                <section id="cli-sandbox">
+                    <h3>aui sandbox</h3>
+                    <p>Testing and analysis commands.</p>
+                    <div class="code-header">
+                        <span>Usage</span>
+                    </div>
+                    <pre><code><span class="token-comment"># Run test scenarios</span>
+aui sandbox run [options]
+
+Options:
+  -f, --file &lt;path&gt;       Run specific test file
+  --mock                  Use mock integrations
+  -v, --verbose           Show detailed output
+  -t, --tag &lt;tag&gt;         Filter tests by tag
+  --format &lt;format&gt;       Output: text or json
+
+<span class="token-comment"># Analyze conversation</span>
+aui sandbox analyze &lt;task-id&gt; [options]
+
+Options:
+  -c, --comment &lt;text&gt;    User feedback
+  -s, --suggest           Suggest fixes
+
+<span class="token-comment"># Self-evolution mode</span>
+aui sandbox evolve [options]
+
+Options:
+  -i, --max-iterations &lt;n&gt;   Maximum iterations (default: 5)
+  -t, --target-score &lt;n&gt;     Target score 0-1 (default: 0.95)
+  --auto-apply               Apply best version</code></pre>
+                </section>
+
+                <!-- SDK Reference -->
+                <section id="sdk">
+                    <h2>SDK Reference <a href="#sdk" class="section-link">#</a></h2>
+                    <p>AUI provides NPM packages for building and integrating with agents programmatically.</p>
+
+                    <div class="card-grid">
+                        <div class="card">
+                            <h4>@aui.io/aui-client</h4>
+                            <p>Official SDK for the AUI Agent Deployment API with full TypeScript support.</p>
+                        </div>
+                        <div class="card">
+                            <h4>@aui/core</h4>
+                            <p>TypeScript types and utilities for AUI agent configuration.</p>
+                        </div>
+                        <div class="card">
+                            <h4>@aui/cli</h4>
+                            <p>Command-line interface for building and managing agents.</p>
+                        </div>
+                        <div class="card">
+                            <h4>@aui/language-server</h4>
+                            <p>LSP server for IDE integration with real-time validation.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="sdk-core">
+                    <h3>@aui/core</h3>
+                    <p>TypeScript types and utilities for working with AUI configuration.</p>
+
+                    <div class="code-header">
+                        <span>Installation</span>
+                    </div>
+                    <pre><code>npm install @aui/core</code></pre>
+
+                    <div class="code-header">
+                        <span>Usage</span>
+                    </div>
+                    <pre><code><span class="token-keyword">import</span> {
+  Agent,
+  Tool,
+  Parameter,
+  Entity,
+  Integration,
+  Rule,
+  Condition
+} <span class="token-keyword">from</span> <span class="token-string">'@aui/core'</span>;
+
+<span class="token-comment">// Define a parameter</span>
+<span class="token-keyword">const</span> customerId: Parameter = {
+  code: <span class="token-string">'customer-id'</span>,
+  type: <span class="token-string">'string'</span>,
+  usage: <span class="token-string">'input'</span>,
+  description: <span class="token-string">'Unique customer identifier'</span>
+};
+
+<span class="token-comment">// Define a tool</span>
+<span class="token-keyword">const</span> getCustomer: Tool = {
+  code: <span class="token-string">'GET_CUSTOMER'</span>,
+  objective: <span class="token-string">'Look up customer information'</span>,
+  status: <span class="token-boolean">true</span>,
+  main_tool: <span class="token-boolean">true</span>,
+  requires_confirmation: <span class="token-boolean">false</span>,
+  response_type: <span class="token-string">'text'</span>,
+  config: {
+    params: {
+      required: [<span class="token-string">'customer-id'</span>]
+    }
+  },
+  integrations: [{ ref: <span class="token-string">'get-customer-api'</span> }],
+  rules: {
+    post: {
+      success: [],
+      fail: []
+    }
+  }
+};</code></pre>
+                </section>
+
+                <section id="sdk-api-client">
+                    <h3>@aui.io/aui-client</h3>
+                    <p>Official SDK for the AUI Agent Deployment API with full TypeScript support, automatic retries, and WebSocket management.</p>
+
+                    <div class="code-header">
+                        <span>Installation</span>
+                    </div>
+                    <pre><code>npm install @aui.io/aui-client</code></pre>
+
+                    <div class="code-header">
+                        <span>Client Initialization</span>
+                    </div>
+                    <pre><code><span class="token-keyword">import</span> { ApolloClient, ApolloEnvironment } <span class="token-keyword">from</span> <span class="token-string">'@aui.io/aui-client'</span>;
+
+<span class="token-comment">// Default GCP environment</span>
+<span class="token-keyword">const</span> client = <span class="token-keyword">new</span> ApolloClient({
+  networkApiKey: <span class="token-string">'YOUR_NETWORK_API_KEY'</span>
+});
+
+<span class="token-comment">// Or specify Azure environment</span>
+<span class="token-keyword">const</span> azureClient = <span class="token-keyword">new</span> ApolloClient({
+  environment: ApolloEnvironment.Azure,
+  networkApiKey: <span class="token-string">'YOUR_NETWORK_API_KEY'</span>
+});</code></pre>
+
+                    <h4>Configuration Options</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>networkApiKey</code></td>
+                                <td>string</td>
+                                <td>-</td>
+                                <td>Required authentication key</td>
+                            </tr>
+                            <tr>
+                                <td><code>environment</code></td>
+                                <td>ApolloEnvironment</td>
+                                <td>Gcp</td>
+                                <td>Gcp or Azure</td>
+                            </tr>
+                            <tr>
+                                <td><code>timeoutInSeconds</code></td>
+                                <td>number</td>
+                                <td>60</td>
+                                <td>Request timeout</td>
+                            </tr>
+                            <tr>
+                                <td><code>maxRetries</code></td>
+                                <td>number</td>
+                                <td>2</td>
+                                <td>Max retry attempts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-header">
+                        <span>REST API Usage</span>
+                    </div>
+                    <pre><code><span class="token-comment">// Create a new task</span>
+<span class="token-keyword">const</span> taskResponse = <span class="token-keyword">await</span> client.controllerApi.createTask({
+  user_id: <span class="token-string">'user123'</span>,
+  task_origin_type: <span class="token-string">'web-widget'</span>
+});
+
+<span class="token-comment">// Send a message</span>
+<span class="token-keyword">const</span> messageResponse = <span class="token-keyword">await</span> client.controllerApi.sendMessage({
+  task_id: taskResponse.id,
+  text: <span class="token-string">'I need help with my order'</span>,
+  is_external_api: <span class="token-boolean">true</span>,
+  context: { url: <span class="token-string">'https://example.com'</span> }
+});
+
+<span class="token-comment">// Get task messages</span>
+<span class="token-keyword">const</span> messages = <span class="token-keyword">await</span> client.controllerApi.getTaskMessages(taskResponse.id);
+
+<span class="token-comment">// List user tasks</span>
+<span class="token-keyword">const</span> tasks = <span class="token-keyword">await</span> client.controllerApi.listUserTasks({
+  user_id: <span class="token-string">'user123'</span>,
+  page: <span class="token-number">1</span>,
+  size: <span class="token-number">10</span>
+});</code></pre>
+
+                    <div class="code-header">
+                        <span>WebSocket Usage</span>
+                    </div>
+                    <pre><code><span class="token-comment">// Connect to WebSocket for streaming responses</span>
+<span class="token-keyword">const</span> socket = <span class="token-keyword">await</span> client.apolloWsSession.connect({
+  debug: <span class="token-boolean">false</span>,
+  reconnectAttempts: <span class="token-number">3</span>,
+  headers: { <span class="token-string">'x-network-api-key'</span>: <span class="token-string">'YOUR_NETWORK_API_KEY'</span> }
+});
+
+socket.on(<span class="token-string">'open'</span>, () => {
+  socket.sendUserMessage({
+    task_id: <span class="token-string">'task-id'</span>,
+    text: <span class="token-string">'Hello!'</span>
+  });
+});
+
+socket.on(<span class="token-string">'message'</span>, (message) => {
+  <span class="token-keyword">if</span> (message.text) {
+    console.log(<span class="token-string">'Response:'</span>, message.text);
+  }
+});
+
+socket.on(<span class="token-string">'error'</span>, (error) => console.error(<span class="token-string">'Error:'</span>, error));
+socket.on(<span class="token-string">'close'</span>, () => console.log(<span class="token-string">'Disconnected'</span>));</code></pre>
+
+                    <h4>Client Methods</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>controllerApi.createTask(options)</code></td>
+                                <td>Create a new task/conversation</td>
+                            </tr>
+                            <tr>
+                                <td><code>controllerApi.sendMessage(options)</code></td>
+                                <td>Send message to a task</td>
+                            </tr>
+                            <tr>
+                                <td><code>controllerApi.getTaskMessages(taskId)</code></td>
+                                <td>Get all messages in a task</td>
+                            </tr>
+                            <tr>
+                                <td><code>controllerApi.listUserTasks(options)</code></td>
+                                <td>List tasks for a user</td>
+                            </tr>
+                            <tr>
+                                <td><code>controllerApi.getProductMetadata(link)</code></td>
+                                <td>Extract product info from URL</td>
+                            </tr>
+                            <tr>
+                                <td><code>controllerApi.getAgentContext(taskId, query)</code></td>
+                                <td>Get agent configuration</td>
+                            </tr>
+                            <tr>
+                                <td><code>controllerApi.getDirectFollowupSuggestions(taskId)</code></td>
+                                <td>Get tools</td>
+                            </tr>
+                            <tr>
+                                <td><code>updateTool(agentCode, toolCode, tool)</code></td>
+                                <td>Update tool</td>
+                            </tr>
+                            <tr>
+                                <td><code>createConversation(options)</code></td>
+                                <td>Start conversation</td>
+                            </tr>
+                            <tr>
+                                <td><code>sendMessage(conversationId, message)</code></td>
+                                <td>Send message</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="sdk-cli">
+                    <h3>@aui/cli</h3>
+                    <p>The CLI can also be used programmatically.</p>
+
+                    <div class="code-header">
+                        <span>Installation</span>
+                    </div>
+                    <pre><code><span class="token-comment"># Global installation (recommended)</span>
+npm install -g @aui/cli
+
+<span class="token-comment"># Local installation</span>
+npm install @aui/cli</code></pre>
+
+                    <h4>Environment Variables</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>AUI_API_KEY</code></td>
+                                <td>API key for authentication</td>
+                            </tr>
+                            <tr>
+                                <td><code>AUI_API_URL</code></td>
+                                <td>Override API base URL</td>
+                            </tr>
+                            <tr>
+                                <td><code>AUI_ORG_ID</code></td>
+                                <td>Organization ID</td>
+                            </tr>
+                            <tr>
+                                <td><code>AUI_ACCOUNT_ID</code></td>
+                                <td>Account ID</td>
+                            </tr>
+                            <tr>
+                                <td><code>AUI_NETWORK_ID</code></td>
+                                <td>Network ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Schema Reference -->
+                <section id="schema-agent">
+                    <h2>Schema Reference: Agent <a href="#schema-agent" class="section-link">#</a></h2>
+                    <p>Complete reference for the agent configuration schema.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>code</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Unique agent identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>version</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Semantic version (e.g., 1.0.0)</td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>What this agent does</td>
+                            </tr>
+                            <tr>
+                                <td><code>language</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Primary language code (default: en)</td>
+                            </tr>
+                            <tr>
+                                <td><code>scope</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>Deployment scope (org_id, account_id, network_id)</td>
+                            </tr>
+                            <tr>
+                                <td><code>objective</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Primary purpose of the agent</td>
+                            </tr>
+                            <tr>
+                                <td><code>guardrails</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Safety guidelines and restrictions</td>
+                            </tr>
+                            <tr>
+                                <td><code>tone_of_voice</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>Communication style settings</td>
+                            </tr>
+                            <tr>
+                                <td><code>context</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>Static or API-based context</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="schema-tool">
+                    <h2>Schema Reference: Tool <a href="#schema-tool" class="section-link">#</a></h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>code</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Unique tool identifier (SCREAMING_SNAKE_CASE)</td>
+                            </tr>
+                            <tr>
+                                <td><code>objective</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>When this tool should be activated</td>
+                            </tr>
+                            <tr>
+                                <td><code>rules</code></td>
+                                <td>object</td>
+                                <td>Yes</td>
+                                <td>Pre and post execution rules</td>
+                            </tr>
+                            <tr>
+                                <td><code>status</code></td>
+                                <td>boolean</td>
+                                <td>No</td>
+                                <td>Whether tool is enabled (default: true)</td>
+                            </tr>
+                            <tr>
+                                <td><code>main_tool</code></td>
+                                <td>boolean</td>
+                                <td>No</td>
+                                <td>Can agent activate directly (default: true)</td>
+                            </tr>
+                            <tr>
+                                <td><code>requires_confirmation</code></td>
+                                <td>boolean</td>
+                                <td>No</td>
+                                <td>Ask confirmation before executing (default: false)</td>
+                            </tr>
+                            <tr>
+                                <td><code>response_type</code></td>
+                                <td>enum</td>
+                                <td>No</td>
+                                <td>text | text_and_widget</td>
+                            </tr>
+                            <tr>
+                                <td><code>tone_of_voice</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Override agent tone for this tool</td>
+                            </tr>
+                            <tr>
+                                <td><code>brevity</code></td>
+                                <td>enum</td>
+                                <td>No</td>
+                                <td>concise | normal | verbose</td>
+                            </tr>
+                            <tr>
+                                <td><code>config</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>Triggers and parameters configuration</td>
+                            </tr>
+                            <tr>
+                                <td><code>integrations</code></td>
+                                <td>array</td>
+                                <td>No</td>
+                                <td>Integration references to execute</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="schema-parameter">
+                    <h2>Schema Reference: Parameter <a href="#schema-parameter" class="section-link">#</a></h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>code</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Unique identifier (kebab-case)</td>
+                            </tr>
+                            <tr>
+                                <td><code>type</code></td>
+                                <td>enum</td>
+                                <td>Yes</td>
+                                <td>string | number | enum | date | array | boolean</td>
+                            </tr>
+                            <tr>
+                                <td><code>usage</code></td>
+                                <td>enum</td>
+                                <td>Yes</td>
+                                <td>input | output | all</td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>What this parameter represents</td>
+                            </tr>
+                            <tr>
+                                <td><code>values</code></td>
+                                <td>string[]</td>
+                                <td>No</td>
+                                <td>Allowed values for enum type</td>
+                            </tr>
+                            <tr>
+                                <td><code>nested_params</code></td>
+                                <td>string[]</td>
+                                <td>No</td>
+                                <td>Child parameter codes</td>
+                            </tr>
+                            <tr>
+                                <td><code>question</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Question to ask when collecting</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="schema-integration">
+                    <h2>Schema Reference: Integration <a href="#schema-integration" class="section-link">#</a></h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>code</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Unique integration identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>type</code></td>
+                                <td>enum</td>
+                                <td>Yes</td>
+                                <td>REST | MCP | RAG | INTERNAL_CONTEXT | STRUCTURED | GEN_AI</td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>What this integration does</td>
+                            </tr>
+                            <tr>
+                                <td><code>endpoint</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>URL, method, auth, headers</td>
+                            </tr>
+                            <tr>
+                                <td><code>request_schema</code></td>
+                                <td>array</td>
+                                <td>No</td>
+                                <td>Request field definitions</td>
+                            </tr>
+                            <tr>
+                                <td><code>test_curl</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>cURL command for testing</td>
+                            </tr>
+                            <tr>
+                                <td><code>response_mapping</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>Maps response to entities/params</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="schema-rule">
+                    <h2>Schema Reference: Rule <a href="#schema-rule" class="section-link">#</a></h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>code</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Unique rule identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>What this rule does</td>
+                            </tr>
+                            <tr>
+                                <td><code>applies_to</code></td>
+                                <td>string[]</td>
+                                <td>No</td>
+                                <td>Tool codes (empty = all tools)</td>
+                            </tr>
+                            <tr>
+                                <td><code>when</code></td>
+                                <td>object</td>
+                                <td>Yes</td>
+                                <td>Condition group (all/any/not)</td>
+                            </tr>
+                            <tr>
+                                <td><code>then</code></td>
+                                <td>object</td>
+                                <td>Yes</td>
+                                <td>Action to take</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Condition Group Structure</h3>
+                    <div class="code-header">
+                        <span>Example</span>
+                    </div>
+                    <pre><code>{
+  <span class="token-property">"when"</span>: {
+    <span class="token-property">"all"</span>: [
+      { <span class="token-property">"method"</span>: <span class="token-string">"param_exists"</span>, <span class="token-property">"param"</span>: <span class="token-string">"transaction-id"</span> },
+      {
+        <span class="token-property">"any"</span>: [
+          { <span class="token-property">"method"</span>: <span class="token-string">"param_value"</span>, <span class="token-property">"param"</span>: <span class="token-string">"amount"</span>, <span class="token-property">"operator"</span>: <span class="token-string">"greater_than"</span>, <span class="token-property">"value"</span>: <span class="token-number">1000</span> },
+          { <span class="token-property">"method"</span>: <span class="token-string">"user_profile"</span>, <span class="token-property">"param"</span>: <span class="token-string">"tier"</span>, <span class="token-property">"operator"</span>: <span class="token-string">"equals"</span>, <span class="token-property">"value"</span>: <span class="token-string">"basic"</span> }
+        ]
+      }
+    ]
+  },
+  <span class="token-property">"then"</span>: {
+    <span class="token-property">"action"</span>: <span class="token-string">"ADD_REQUIRED_PARAM"</span>,
+    <span class="token-property">"params"</span>: [<span class="token-string">"verification-document"</span>]
+  }
+}</code></pre>
+                </section>
+
+                <!-- Footer -->
+                <footer style="margin-top: 96px; padding-top: 48px; border-top: 1px solid var(--color-border); text-align: center; color: var(--color-text-muted);">
+                    <p>AUI Agent Builder Documentation</p>
+                    <p style="margin-top: 8px; font-size: 13px;">Powered by Apollo-1 &mdash; The Neuro-Symbolic Foundation Model</p>
+                    <p style="margin-top: 24px; font-size: 12px;">&copy; 2026 AUI, Inc. All rights reserved.</p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(event, tabId) {
+            const tabList = event.target.closest('.tabs');
+
+            // Deactivate all tabs
+            tabList.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            tabList.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Activate selected tab
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Sidebar active state
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const sections = document.querySelectorAll('section[id]');
+
+        function updateActiveLink() {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

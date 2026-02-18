@@ -628,10 +628,68 @@
             opacity: 1;
         }
 
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--color-text-main);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            line-height: 1;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Table wrapper for horizontal scroll */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0 24px;
+        }
+
+        .table-wrapper table {
+            margin: 0;
+            min-width: 500px;
+        }
+
         /* Responsive */
+        @media (max-width: 1200px) {
+            .content {
+                padding: 40px 32px 80px;
+            }
+        }
+
         @media (max-width: 1024px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
             .sidebar {
                 transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 50;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
             }
 
             .main {
@@ -640,6 +698,177 @@
 
             .content {
                 padding: 32px 24px 64px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 56px;
+            }
+
+            .header {
+                padding: 0 16px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .content {
+                padding: 24px 16px 48px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            .hero {
+                padding: 32px 0 48px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            pre {
+                padding: 12px 16px;
+                font-size: 12px;
+            }
+
+            pre code {
+                font-size: 12px;
+            }
+
+            .code-header {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+
+            .endpoint-header {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 12px 16px;
+            }
+
+            .endpoint-path {
+                font-size: 12px;
+                word-break: break-all;
+            }
+
+            .endpoint-body {
+                padding: 16px;
+            }
+
+            .param-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .param-name {
+                min-width: auto;
+            }
+
+            .callout {
+                padding: 12px 16px;
+            }
+
+            .flow-diagram {
+                padding: 16px;
+                font-size: 10px;
+            }
+
+            .tab-list {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-button {
+                padding: 8px 12px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+
+            .sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding: 20px 12px 40px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .card-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            pre {
+                padding: 10px 12px;
+            }
+
+            .badge {
+                font-size: 10px;
+                padding: 3px 6px;
             }
         }
 
@@ -716,10 +945,13 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <a href="#" class="logo">
-                <div class="logo-icon">A</div>
-                <span class="logo-text">AUI Agent Builder</span>
-            </a>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">&#9776;</button>
+                <a href="#" class="logo">
+                    <div class="logo-icon">A</div>
+                    <span class="logo-text">AUI Agent Builder</span>
+                </a>
+            </div>
             <nav class="header-nav">
                 <a href="#overview">Overview</a>
                 <a href="#quick-start">Quick Start</a>
@@ -731,8 +963,11 @@
     </header>
 
     <div class="layout">
+        <!-- Sidebar Overlay (for mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Sidebar -->
-        <nav class="sidebar">
+        <nav class="sidebar" id="sidebar">
             <div class="sidebar-section">
                 <div class="sidebar-title">Getting Started</div>
                 <a href="#overview" class="sidebar-link active">Overview</a>
@@ -3434,6 +3669,21 @@ npm install @aui/cli</code></pre>
         window.addEventListener('scroll', updateActiveLink);
         updateActiveLink();
 
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+        });
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -3445,7 +3695,28 @@ npm install @aui/cli</code></pre>
                         block: 'start'
                     });
                 }
+                // Close mobile menu when clicking a link
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('active');
             });
+        });
+
+        // Close menu on window resize if desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024) {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
+
+        // Wrap tables for horizontal scroll on mobile
+        document.querySelectorAll('.content table').forEach(table => {
+            if (!table.parentElement.classList.contains('table-wrapper')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-wrapper';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
         });
     </script>
 </body>
